@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Akses ditolak{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>403 — Akses ditolak</h1>
+  <p class="subtitle">Kamu tidak punya izin membuka halaman ini. Percobaan ini dicatat.</p>
+  <a class="btn btn-link" href="{{ url_for('dashboard') }}">Kembali ke dashboard</a>
+</div>
+{% endblock %}

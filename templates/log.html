@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Log aktivitas{% endblock %}
+{% block lebar %}wide{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>Log aktivitas</h1>
+  <p class="subtitle">{{ logs|length }} catatan terbaru (maks. 200)</p>
+
+  <form method="get" class="form-baris">
+    <select name="aksi">
+      <option value="">Semua aksi</option>
+      {% for a in daftar_aksi %}
+        <option value="{{ a }}" {% if a == aksi %}selected{% endif %}>{{ a }}</option>
+      {% endfor %}
+    </select>
+    <button type="submit" class="btn btn-kecil">Saring</button>
+  </form>
+
+  <div class="tabel-wrap">
+    <table>
+      <thead>
+        <tr><th>Waktu</th><th>Username</th><th>Aksi</th><th>Detail</th><th>IP</th></tr>
+      </thead>
+      <tbody>
+        {% for l in logs %}
+        <tr>
+          <td>{{ l.created_at.strftime('%d/%m/%Y %H:%M:%S') }}</td>
+          <td>{{ l.username or '—' }}</td>
+          <td>
+            {% if l.aksi in ['login_gagal', 'login_ditolak', 'akun_dikunci', 'akses_ditolak'] %}
+              <span class="tag tingkat-kritis">{{ l.aksi }}</span>
+            {% elif l.aksi == 'login_berhasil' %}
+              <span class="tag status-selesai">{{ l.aksi }}</span>
+            {% else %}
+              <span class="tag">{{ l.aksi }}</span>
+            {% endif %}
+          </td>
+          <td>{{ l.detail or '—' }}</td>
+          <td>{{ l.ip_address }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <a class="btn btn-link btn-kedua" href="{{ url_for('dashboard') }}">Kembali</a>
+</div>
+{% endblock %}

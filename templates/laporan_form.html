@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Buat laporan{% endblock %}
+{% block lebar %}wide{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>Buat laporan insiden</h1>
+  <p class="subtitle">Ceritakan kejadian mencurigakan yang kamu temukan.</p>
+
+  {% if form.errors %}
+    <div class="flash flash-danger">Periksa lagi isiannya: semua kolom wajib diisi dan tidak boleh terlalu panjang.</div>
+  {% endif %}
+
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    {{ form.judul.label }} {{ form.judul() }}
+    {{ form.kategori.label }} {{ form.kategori() }}
+    {{ form.tingkat.label }} {{ form.tingkat() }}
+    {{ form.deskripsi.label }} {{ form.deskripsi(rows=6) }}
+    {{ form.submit(class="btn") }}
+  </form>
+
+  <a class="btn btn-link btn-kedua" href="{{ url_for('dashboard') }}">Kembali</a>
+</div>
+{% endblock %}

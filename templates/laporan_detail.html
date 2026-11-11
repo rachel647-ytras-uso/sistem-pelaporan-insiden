@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Laporan #{{ laporan.id }}{% endblock %}
+{% block lebar %}wide{% endblock %}
+
+{% block content %}
+<div class="card">
+  <p class="subtitle">
+    Laporan #{{ laporan.id }} · oleh {{ laporan.pelapor }} · {{ laporan.created_at.strftime('%d/%m/%Y %H:%M') }}
+  </p>
+  <h1>{{ laporan.judul }}</h1>
+
+  <p>
+    <span class="tag">{{ laporan.kategori|replace('_', ' ') }}</span>
+    <span class="tag tingkat-{{ laporan.tingkat }}">{{ laporan.tingkat }}</span>
+    <span class="tag status-{{ laporan.status }}">{{ laporan.status }}</span>
+  </p>
+
+  <div class="isi">{{ laporan.deskripsi }}</div>
+
+  {% if laporan.catatan_admin %}
+    <h3>Catatan admin{% if laporan.penangan %} ({{ laporan.penangan }}){% endif %}</h3>
+    <div class="isi">{{ laporan.catatan_admin }}</div>
+  {% endif %}
+
+  {% if form %}
+    <h3>Tangani laporan</h3>
+    <form method="post" novalidate>
+      {{ form.hidden_tag() }}
+      {{ form.status.label }} {{ form.status() }}
+      {{ form.catatan_admin.label }} {{ form.catatan_admin(rows=4) }}
+      {{ form.submit(class="btn") }}
+    </form>
+  {% endif %}
+
+  {% if session.role == 'user' %}
+    <a class="btn btn-link btn-kedua" href="{{ url_for('laporan_saya') }}">Kembali</a>
+  {% else %}
+    <a class="btn btn-link btn-kedua" href="{{ url_for('semua_laporan') }}">Kembali</a>
+  {% endif %}
+</div>
+{% endblock %}

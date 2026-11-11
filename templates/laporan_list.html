@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ judul }}{% endblock %}
+{% block lebar %}wide{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>{{ judul }}</h1>
+  <p class="subtitle">{{ daftar|length }} laporan</p>
+
+  {% if daftar %}
+  <div class="tabel-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Judul</th>
+          {% if tampil_pelapor %}<th>Pelapor</th>{% endif %}
+          <th>Kategori</th>
+          <th>Tingkat</th>
+          <th>Status</th>
+          <th>Tanggal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for l in daftar %}
+        <tr>
+          <td>{{ l.id }}</td>
+          <td><a href="{{ url_for('laporan_detail', laporan_id=l.id) }}">{{ l.judul }}</a></td>
+          {% if tampil_pelapor %}<td>{{ l.pelapor }}</td>{% endif %}
+          <td>{{ l.kategori|replace('_', ' ') }}</td>
+          <td><span class="tag tingkat-{{ l.tingkat }}">{{ l.tingkat }}</span></td>
+          <td><span class="tag status-{{ l.status }}">{{ l.status }}</span></td>
+          <td>{{ l.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <p class="subtitle">Belum ada laporan.</p>
+  {% endif %}
+
+  <a class="btn btn-link btn-kedua" href="{{ url_for('dashboard') }}">Kembali</a>
+</div>
+{% endblock %}

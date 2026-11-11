@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Kelola akun{% endblock %}
+{% block lebar %}wide{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>Kelola akun</h1>
+  <p class="subtitle">{{ daftar|length }} akun terdaftar</p>
+
+  <div class="tabel-wrap">
+    <table>
+      <thead>
+        <tr><th>#</th><th>Username</th><th>Role</th><th>Status</th><th>Ubah</th></tr>
+      </thead>
+      <tbody>
+        {% for u in daftar %}
+        {% set f = form_ubah[u.id] %}
+        <tr>
+          <td>{{ u.id }}</td>
+          <td>
+            {{ u.username }}
+            {% if u.id == session.user_id %}<span class="tag">kamu</span>{% endif %}
+          </td>
+          <td><span class="badge">{{ u.role }}</span></td>
+          <td>
+            {% if not u.is_active %}
+              <span class="tag tingkat-kritis">nonaktif</span>
+            {% elif u.locked_until and u.locked_until > sekarang %}
+              <span class="tag tingkat-tinggi">terkunci</span>
+            {% else %}
+              <span class="tag status-selesai">aktif</span>
+            {% endif %}
+          </td>
+          <td>
+            {% if u.id != session.user_id %}
+            <form method="post" action="{{ url_for('ubah_akun', user_id=u.id) }}" class="form-baris">
+              {{ f.hidden_tag() }}
+              {{ f.role() }}
+              {{ f.is_active() }}
+              {{ f.submit(class="btn btn-kecil") }}
+            </form>
+            {% else %}
+              —
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Buat akun baru</h3>
+  {% if form_baru.errors %}
+    <div class="flash flash-danger">
+      Username 3–50 karakter (hanya huruf, angka, garis bawah). Password minimal 12 karakter.
+    </div>
+  {% endif %}
+  <form method="post" novalidate>
+    {{ form_baru.hidden_tag() }}
+    {{ form_baru.username.label }} {{ form_baru.username() }}
+    {{ form_baru.role.label }} {{ form_baru.role() }}
+    {{ form_baru.password.label }} {{ form_baru.password(autocomplete="new-password") }}
+    {{ form_baru.submit(class="btn") }}
+  </form>
+
+  <a class="btn btn-link btn-kedua" href="{{ url_for('dashboard') }}">Kembali</a>
+</div>
+{% endblock %}

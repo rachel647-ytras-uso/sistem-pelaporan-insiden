@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Masuk{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1>Masuk</h1>
+  <p class="subtitle">Sistem Pelaporan Insiden Keamanan</p>
+
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+
+    <label for="username">Username</label>
+    {{ form.username(id="username", autocomplete="username") }}
+
+    <label for="password">Password</label>
+    {{ form.password(id="password", autocomplete="current-password") }}
+
+    {{ form.submit(class="btn") }}
+  </form>
+</div>
+{% endblock %}
